@@ -14,7 +14,7 @@ The destination isn't MKDocs specifically. It's **markdown as the source of trut
 
 | Renderer | Use Case |
 |----------|----------|
-| **GitHub/BitBucket** | Already there, free, good enough |
+| **GitHub/BitBucket Cloud** | Already there, free, good enough |
 | **VS Code Preview** | While you're editing |
 | **MKDocs Material** | When you want it pretty |
 | **Local `mkdocs serve`** | Fast, offline, no hosting |
