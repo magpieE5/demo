@@ -14,10 +14,12 @@ The destination isn't MKDocs specifically. It's **markdown as the source of trut
 
 | Renderer | Use Case |
 |----------|----------|
-| **GitHub/BitBucket Cloud** | Already there, free, good enough |
+| **GitHub** | Good enough (this page),  very cheap teams licensing|
 | **VS Code Preview** | While you're editing |
+| **Obsidian** | Personal knowledge management, graph view |
 | **MKDocs Material** | When you want it pretty |
 | **Local `mkdocs serve`** | Fast, offline, no hosting |
+| **Confluence** | Push to Confluence via API when needed |
 
 **You're not locked into anything.** Markdown is portable. Git is portable. The renderer is just presentation.
 
@@ -29,10 +31,11 @@ The destination isn't MKDocs specifically. It's **markdown as the source of trut
 flowchart LR
     A[Edit markdown] --> B[Commit to git]
     B --> C{Where to view?}
-    C --> D[GitHub renders it]
-    C --> E[VS Code renders it]
-    C --> F[mkdocs serve locally]
-    C --> G[Deploy to static host]
+    C --> D[GitHub]
+    C --> E[VS Code]
+    C --> F[Obsidian]
+    C --> G[mkdocs serve]
+    C --> H[Confluence]
 ```
 
 That's it. No WYSIWYG. No database. No vendor lock-in.
@@ -48,7 +51,7 @@ GitHub renders markdown beautifully out of the box:
 - Syntax highlighting for any language
 - **Mermaid diagrams** (native support since 2022)
 - Relative links between docs
-- Inline images
+- Inline images/gifs, Terminal animations 
 
 ### Mermaid Diagrams
 
@@ -58,9 +61,11 @@ No Gliffy. No paid plugins. Just text:
 graph TD
     A[Confluence Page] -->|Export| B[Markdown]
     B --> C[Git Repo]
-    C --> D[GitHub Renders]
-    C --> E[MKDocs Renders]
-    C --> F[VS Code Renders]
+    C --> D[GitHub]
+    C --> E[MKDocs]
+    C --> F[VS Code]
+    C --> G[Obsidian]
+    C -->|Push via API| A
 ```
 
 ```mermaid
@@ -105,32 +110,15 @@ def process_document(path: str) -> dict:
 
 Not everything belongs in markdown. Here's the honest breakdown:
 
-```mermaid
-quadrantChart
-    title Documentation Tool Fit
-    x-axis Low Technical Skill --> High Technical Skill
-    y-axis Low Change Frequency --> High Change Frequency
-
-    quadrant-1 MKDocs / GitHub
-    quadrant-2 Confluence
-    quadrant-3 SharePoint / TDX
-    quadrant-4 Git + Markdown
-
-    Runbooks: [0.85, 0.75]
-    Architecture Docs: [0.80, 0.25]
-    Onboarding: [0.40, 0.30]
-    Meeting Notes: [0.30, 0.90]
-    Support KB: [0.25, 0.50]
-    Code Comments: [0.95, 0.60]
-```
-
 | Audience | Skill Level | Best Fit |
 |----------|-------------|----------|
 | SDDS Technical (AIA, ERP, DDS) | Git-native | **Markdown + Git** |
 | Campus IT (broad) | Mixed | Confluence Cloud |
 | Non-IT Collaborators | Low | Confluence / TDX |
+| Small teams wanting Confluence | Any | Atlassian Cloud Free Tier |
 
 **SDDS doesn't need Confluence for technical docs.** We live in git. Our docs should too.
+**Note on Atlassian Free Tier:** Atlassian Cloud is free for up to 10 users, and includes many expensive marketplace apps at no cost. Several departments on campus already do this independently. For small teams that want Confluence features without the campus service overhead, this is a viable option.
 
 ---
 
@@ -153,15 +141,25 @@ Confluence storage format is proprietary XML soup.
 
 **Confluence → Markdown isn't that hard:**
 
-1. Use the [Markdown Exporter](https://marketplace.atlassian.com/apps/1221351/markdown-exporter-for-confluence) marketplace app
+1. Use the [Markdown Exporter](https://marketplace.atlassian.com/apps/1221351/markdown-exporter-for-confluence) marketplace app, or custom-built (already proofed by Jesse/Brock)
 2. Export space as markdown
 3. Clean up (AI handles 80% of this)
 4. Commit to git
+
+**Markdown → Confluence also works:**
+
+You can push markdown back to Confluence programmatically. Write in markdown, version in git, publish to Confluence for those who need it there.
+
+Example: [Claude Teams UO Deployment - Security Assessment & User Guide](https://confluence.uoregon.edu/spaces/~lampman/pages/658604952/Claude+Teams+UO+Deployment+-+Security+Assessment+User+Guide)
+
+That page is authored in markdown, stored in git, and pushed to Confluence via API. Best of both worlds.
 
 **Gliffy diagrams:**
 - Export existing as SVG (one-time)
 - New diagrams in Mermaid (text-based, version controlled)
 - Complex stuff in draw.io → export SVG
+
+**Note on Mermaid:** GitHub, VS Code, Obsidian and MKDocs render Mermaid natively (free). On-prem Confluence does not—you'd need Cloud + a paid marketplace app. Another reason to keep the source in git and render elsewhere.
 
 Jesse and I have done this. It's not painful.
 
@@ -199,16 +197,23 @@ mkdocs serve
 flowchart TD
     A[Current: Confluence] --> B{Team Technical?}
     B -->|Yes| C[Migrate to Markdown + Git]
-    B -->|No| D[Stay on Confluence Cloud]
+    B -->|No| D{Team ≤10 people?}
 
-    C --> E{Need Polish?}
-    E -->|Yes| F[Add MKDocs Material]
-    E -->|No| G[GitHub rendering is fine]
+    C --> E{Need shared site?}
+    E -->|Yes, pretty| F[MKDocs Material -local or hosted]
+    E -->|Yes, basic| G[GitHub renders it]
+    E -->|No| M[BitBucket + VS Code locally]
+
+    D -->|Yes| J[Atlassian Cloud Free Tier]
+    D -->|No| K[Stay on Confluence Cloud]
 
     F --> H[Team owns their instance]
     G --> H
-    D --> I[IS manages centrally]
+    M --> H
+    J --> L[Team manages their own]
+    K --> I[IS manages centrally]
 ```
+
 
 1. **Don't fight the campus service** — Confluence Cloud for broad IT use is fine
 2. **Technical teams go their own way** — We manage our own markdown repos
