@@ -1,174 +1,247 @@
-# ✨ Project Showcase — Markdown Sample
+# Documentation Futures for Technical Teams
 
-A compact, GitHub-friendly sample README that demonstrates common Markdown features you can show your friend: mermaid diagrams, call-outs, admonitions (using GitHub-friendly patterns), fenced code blocks, task lists, tables, collapsible sections, and more.
-
----
-
-## Table of contents
-- [Quick Callouts](#quick-callouts)
-- [Mermaid Diagrams](#mermaid-diagrams)
-- [Code Samples](#code-samples)
-- [Tasks & Table](#tasks--table)
-- [Collapsible Admonition](#collapsible-admonition)
-- [Notes & Links](#notes--links)
+> **TL;DR**: Just markdown. Just git. Render anywhere.
 
 ---
 
-## Quick Callouts
+## The Pitch
 
-> 🔔 **Heads-up:** This blockquote acts as a simple callout. Use it for short warnings or notices.
-
-> ✅ **Note:** Inline `code` looks like this.
-
-For richer, foldable advice use the collapsible sections below.
-
----
-
-## Mermaid Diagrams
-
-GitHub supports Mermaid diagrams inside fenced code blocks. Example flowchart:
-
-```mermaid
-flowchart TD
-  A[Start] --> B{Is it awesome?}
-  B -->|Yes| C[Celebrate 🎉]
-  B -->|No| D[Improve it 🔧]
-  C --> E[Share]
-  D --> E
+```
+Confluence → Markdown + Git → Render wherever you want
 ```
 
-Sequence diagram example:
+The destination isn't MKDocs specifically. It's **markdown as the source of truth**, version controlled in git, rendered by whatever tool fits:
+
+| Renderer | Use Case |
+|----------|----------|
+| **GitHub/BitBucket** | Already there, free, good enough |
+| **VS Code Preview** | While you're editing |
+| **MKDocs Material** | When you want it pretty |
+| **Local `mkdocs serve`** | Fast, offline, no hosting |
+
+**You're not locked into anything.** Markdown is portable. Git is portable. The renderer is just presentation.
+
+---
+
+## The Workflow
+
+```mermaid
+flowchart LR
+    A[Edit markdown] --> B[Commit to git]
+    B --> C{Where to view?}
+    C --> D[GitHub renders it]
+    C --> E[VS Code renders it]
+    C --> F[mkdocs serve locally]
+    C --> G[Deploy to static host]
+```
+
+That's it. No WYSIWYG. No database. No vendor lock-in.
+
+---
+
+## What Renders for Free
+
+### GitHub Markdown
+
+GitHub renders markdown beautifully out of the box:
+- Headers, lists, tables, code blocks
+- Syntax highlighting for any language
+- **Mermaid diagrams** (native support since 2022)
+- Relative links between docs
+- Inline images
+
+### Mermaid Diagrams
+
+No Gliffy. No paid plugins. Just text:
+
+```mermaid
+graph TD
+    A[Confluence Page] -->|Export| B[Markdown]
+    B --> C[Git Repo]
+    C --> D[GitHub Renders]
+    C --> E[MKDocs Renders]
+    C --> F[VS Code Renders]
+```
 
 ```mermaid
 sequenceDiagram
-  Alice->>Bob: Hello Bob, how are you?
-  Bob-->>Alice: I am good thanks!
-  Alice->>Bob: Want to collaborate?
+    participant Dev as Developer
+    participant Git as Git Repo
+    participant GH as GitHub
+
+    Dev->>Git: git commit -m "update docs"
+    Dev->>Git: git push
+    Git->>GH: Webhook
+    GH->>GH: Renders markdown
+    Note over GH: Instantly viewable
 ```
 
-Class diagram example:
+Version controlled. Diffable. No binary blobs.
 
-```mermaid
-classDiagram
-  class User {
-    +String name
-    +String email
-    +login()
-  }
-  class Repo {
-    +String name
-    +listContributors()
-  }
-  User "1" --> "*" Repo : owns
+### Code Blocks
+
+```sql
+-- Syntax highlighting just works
+SELECT
+    d.department_name,
+    COUNT(*) as headcount
+FROM employees e
+JOIN departments d ON e.dept_id = d.id
+GROUP BY 1
+ORDER BY 2 DESC;
 ```
-
----
-
-## Code Samples
-
-Bash:
-
-```bash
-# Install dependencies (example)
-npm install
-# Run tests
-npm test
-```
-
-JavaScript:
-
-```javascript
-// greet.js
-export function greet(name) {
-  return `Hello, ${name}!`;
-}
-
-console.log(greet('Friend'));
-```
-
-Python:
 
 ```python
-# hello.py
-def greet(name: str) -> str:
-    return f"Hello, {name}!"
-
-if __name__ == "__main__":
-    print(greet("Friend"))
+# Works for any language
+def process_document(path: str) -> dict:
+    """AI can read this. Confluence storage format? Not so much."""
+    with open(path) as f:
+        return parse_markdown(f.read())
 ```
 
-Inline code example: Use `git clone <repo>` to copy the repo locally.
+---
+
+## Audience Fit
+
+Not everything belongs in markdown. Here's the honest breakdown:
+
+```mermaid
+quadrantChart
+    title Documentation Tool Fit
+    x-axis Low Technical Skill --> High Technical Skill
+    y-axis Low Change Frequency --> High Change Frequency
+
+    quadrant-1 MKDocs / GitHub
+    quadrant-2 Confluence
+    quadrant-3 SharePoint / TDX
+    quadrant-4 Git + Markdown
+
+    Runbooks: [0.85, 0.75]
+    Architecture Docs: [0.80, 0.25]
+    Onboarding: [0.40, 0.30]
+    Meeting Notes: [0.30, 0.90]
+    Support KB: [0.25, 0.50]
+    Code Comments: [0.95, 0.60]
+```
+
+| Audience | Skill Level | Best Fit |
+|----------|-------------|----------|
+| SDDS Technical (AIA, ERP, DDS) | Git-native | **Markdown + Git** |
+| Campus IT (broad) | Mixed | Confluence Cloud |
+| Non-IT Collaborators | Low | Confluence / TDX |
+
+**SDDS doesn't need Confluence for technical docs.** We live in git. Our docs should too.
 
 ---
 
-## Tasks & Table
+## The AI Angle
 
-- [x] Write sample README
-- [ ] Add real project content
-- [ ] Share with friend
+This matters more than people realize:
 
-Contributors table:
+| Format | AI Can... |
+|--------|-----------|
+| **Markdown** | Read directly, search, reference, update |
+| **Confluence** | Requires export, conversion, loses structure |
 
-| Contributor | Role       | Contact |
-|-------------|------------|---------|
-| You         | Author     | @your-handle |
-| Friend      | Reviewer   | @their-handle |
+A markdown-first knowledge base is immediately usable by AI tools. Every MCP, every code assistant, every search tool understands plaintext markdown.
 
----
-
-## Collapsible Admonitions
-
-<details>
-<summary>💡 Tip — Click to expand</summary>
-
-Use blockquotes for simple admonitions:
-
-> 📌 **Tip:** Prefer short callouts for important notes. Example: *Use `--help` to see available CLI options.*
-
-You can also include code or diagrams inside these collapsible sections.
-
-</details>
-
-<details>
-<summary>⚠️ Warning — Expand for caution</summary>
-
-> ⚠️ **Important:** This is a GitHub-friendly pattern for warnings. Avoid unsupported markdown extensions (like `::: warning`) if you want maximum compatibility.
-
-</details>
+Confluence storage format is proprietary XML soup.
 
 ---
 
-## Example: Small How-to Section
+## Conversion Reality
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/yourname/yourrepo.git
-   ```
-2. Install:
-   ```bash
-   npm install
-   ```
-3. Run:
-   ```bash
-   npm start
-   ```
+**Confluence → Markdown isn't that hard:**
 
----
+1. Use the [Markdown Exporter](https://marketplace.atlassian.com/apps/1221351/markdown-exporter-for-confluence) marketplace app
+2. Export space as markdown
+3. Clean up (AI handles 80% of this)
+4. Commit to git
 
-## Extra: Quote, Links & Images
+**Gliffy diagrams:**
+- Export existing as SVG (one-time)
+- New diagrams in Mermaid (text-based, version controlled)
+- Complex stuff in draw.io → export SVG
 
-> “Simplicity is the soul of efficiency.” — Austin Freeman
-
-Useful links:
-- [GitHub Docs — Basic writing and formatting syntax](https://docs.github.com/en/get-started/writing-on-github/basic-writing-and-formatting-syntax)
-- [Mermaid Live Editor](https://mermaid.live/) — Quickly preview mermaid diagrams
-
-Small image example:
-
-![Small logo](https://via.placeholder.com/80x80?text=Logo)
+Jesse and I have done this. It's not painful.
 
 ---
 
-## Closing
+## MKDocs Material (When You Want Pretty)
 
-This file is designed to be copy-paste-ready for GitHub README usage. If you want a version tailored to a specific project (with badges, CI status, usage examples, or a real repo link), tell me the project name and what sections you'd like included and I'll update it.
+For documentation that needs polish:
+
+```bash
+# Install once
+pip install mkdocs-material
+
+# Serve locally
+mkdocs serve
+# → http://localhost:8000
+
+# That's it.
+```
+
+**Features:**
+- Beautiful Material Design theme
+- Built-in search (client-side, fast)
+- Dark mode toggle
+- Mobile responsive
+- Edit button → links to repo for direct editing
+
+**But you don't need it.** GitHub rendering is often enough.
+
+---
+
+## Recommended Path for SDDS
+
+```mermaid
+flowchart TD
+    A[Current: Confluence] --> B{Team Technical?}
+    B -->|Yes| C[Migrate to Markdown + Git]
+    B -->|No| D[Stay on Confluence Cloud]
+
+    C --> E{Need Polish?}
+    E -->|Yes| F[Add MKDocs Material]
+    E -->|No| G[GitHub rendering is fine]
+
+    F --> H[Team owns their instance]
+    G --> H
+    D --> I[IS manages centrally]
+```
+
+1. **Don't fight the campus service** — Confluence Cloud for broad IT use is fine
+2. **Technical teams go their own way** — We manage our own markdown repos
+3. **No central MKDocs service** — Teams own it, no burden on Tyf
+4. **Start simple** — GitHub rendering first, MKDocs if needed
+
+---
+
+## Key Points
+
+| Question | Answer |
+|----------|--------|
+| What's the actual proposal? | Markdown + git. Renderer is optional. |
+| Does this replace Confluence? | For technical teams, yes. Campus-wide, no. |
+| Who supports it? | Teams own their own repos |
+| Is conversion hard? | No. AI helps. We've done it. |
+| What about Gliffy? | Mermaid is better and free |
+| What about search across teams? | GitHub search, or accept siloed docs |
+| Is MKDocs sustainable? | MIT licensed, not VC-backed, stable |
+
+---
+
+## Resources
+
+- [MKDocs Material](https://squidfunk.github.io/mkdocs-material/) — The pretty option
+- [Mermaid Live Editor](https://mermaid.live/) — Try diagrams interactively
+- [GitHub Markdown Demo](https://github.com/magpieE5/demo) — What renders natively
+- [Markdown Exporter](https://marketplace.atlassian.com/apps/1221351/markdown-exporter-for-confluence) — Confluence → Markdown
+
+**People:**
+- **Ryan Leonard / NTS** — Already using MKDocs on campus
+- **Jesse & Brock** — Experience with Confluence export, happy to help
+
+---
+
+> *The goal isn't to convince everyone to switch. It's to have markdown + git as a legitimate option for teams where it fits.*
