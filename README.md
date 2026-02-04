@@ -247,6 +247,8 @@ flowchart TD
 - **Ryan Leonard / NTS** — Already using MKDocs on campus
 - **Jesse & Brock** — Experience with Confluence export, happy to help
 
++**A note on outcomes:** If we end up on Confluence Cloud, that's fine. Confluence isn't bad—it's a capable tool with a lot of history behind it. The point of this document isn't to win an argument. It's to think clearly about options. And here's the thing: even if the org chooses Confluence Cloud, teams can still write in markdown, version in git, and push to Confluence via API. The source of truth stays portable, AI-friendly, and under your control. The destination is just presentation. So wherever this lands, the thinking was worth it.
+
 ---
 
 > *The goal isn't to convince everyone to switch. It's to have markdown + git as a legitimate option for teams where it fits.*
